@@ -1535,6 +1535,14 @@ h1,h2,h3,h4{text-wrap:balance}
 #journey .journey .steps{grid-column:1;align-self:center}
 #journey .journey>div:last-child{grid-column:2;grid-row:2;align-self:center}
 @media (max-width:899px){#journey .journey .steps,#journey .journey>div:last-child{grid-column:1;grid-row:auto}#journey .journey>div:last-child{margin-top:36px}}
+
+/* journey: dark line under the heading (same gap as Why Now / What I Do), tighter row below */
+#journey .journey{row-gap:0!important}
+#journey .journey .sec-head{margin-bottom:0!important;padding-bottom:68px;border-bottom:1px solid var(--ink);max-width:none!important;width:100%}
+#journey .journey .steps,#journey .journey>div:last-child{margin-top:40px}
+#journey .journey>div:last-child{align-self:start!important;margin-top:40px!important}
+#journey .journey .steps{align-self:center!important}
+@media (max-width:899px){#journey .journey .sec-head{padding-bottom:34px}#journey .journey .steps{margin-top:28px}#journey .journey>div:last-child{margin-top:36px!important}}
 #cinematic-experience .cinematic-photo-caption{color:#fff!important;font-weight:400!important;font-size:13px!important;opacity:1!important;text-shadow:0 1px 3px rgba(0,0,0,.75),0 0 10px rgba(0,0,0,.45)!important}
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
