@@ -1527,6 +1527,14 @@ h1,h2,h3,h4{text-wrap:balance}
 
 /* closing card: no border, soft card only */
 #contact .close{border:0!important}
+
+/* journey: heading full width, phone centered on the Before/During/After steps */
+#journey .journey{row-gap:0}
+#journey .journey>div:first-child{display:contents}
+#journey .journey .sec-head{grid-column:1/-1}
+#journey .journey .steps{grid-column:1;align-self:center}
+#journey .journey>div:last-child{grid-column:2;grid-row:2;align-self:center}
+@media (max-width:899px){#journey .journey .steps,#journey .journey>div:last-child{grid-column:1;grid-row:auto}#journey .journey>div:last-child{margin-top:36px}}
 #cinematic-experience .cinematic-photo-caption{color:#fff!important;font-weight:400!important;font-size:13px!important;opacity:1!important;text-shadow:0 1px 3px rgba(0,0,0,.75),0 0 10px rgba(0,0,0,.45)!important}
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
