@@ -1475,6 +1475,12 @@ h1,h2,h3,h4{text-wrap:balance}
 @media (max-width:899px){:root{--div-sp:48px}}
 .slide:not(.hero):not(.contact):not(.cinematic-chapter):has(+ .slide:not(.hero):not(.contact):not(.cinematic-chapter)){padding-bottom:var(--div-sp)!important}
 .slide:not(.hero):not(.contact):not(.cinematic-chapter) + .slide:not(.hero):not(.contact):not(.cinematic-chapter){padding-top:var(--div-sp)!important;position:relative}
+
+/* card grids: no per-card rules, spacing only (top bold line stays) */
+.factor,.factor:nth-child(even),.cap-card,.cap-card:nth-child(n+4){border-bottom:0!important;border-left:0!important}
+.factor:hover,.cap-card:hover{background:none!important}
+.factors{margin-bottom:-26px}.caps{margin-bottom:-24px}
+@media (max-width:899px){.factors{margin-bottom:-22px}}
 #cinematic-experience .cinematic-photo-caption{color:#fff!important;font-weight:400!important;font-size:13px!important;opacity:1!important;text-shadow:0 1px 3px rgba(0,0,0,.75),0 0 10px rgba(0,0,0,.45)!important}
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
