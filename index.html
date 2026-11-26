@@ -1525,14 +1525,8 @@ h1,h2,h3,h4{text-wrap:balance}
 #market .stats-src{margin:8px 0 20px!important;text-align:center!important;max-width:none}
 @media (max-width:760px){#market .stats-src{margin:6px 0 12px!important}}
 
-/* closing card frame: wine-label double line + ornaments */
-#contact .close{border:1px solid rgba(175,138,64,.55)!important}
-#contact .close::before{content:"";position:absolute;inset:10px;border:1px solid rgba(175,138,64,.38);border-radius:20px;pointer-events:none;z-index:1}
-#contact .frame-orn{position:absolute;left:50%;top:0;transform:translateX(-50%);width:120px;height:20px;z-index:2;line-height:0}
-#contact .frame-orn.bot{top:auto;bottom:0}
-#contact .frame-orn svg{width:120px;height:20px;display:block}
-#contact .close>.frame-orn{grid-column:auto}
-@media (max-width:760px){#contact .close::before{inset:8px;border-radius:15px}#contact .frame-orn{width:96px;height:16px;top:0}#contact .frame-orn.bot{top:auto;bottom:0}#contact .frame-orn svg{width:96px;height:16px}}
+/* closing card: no border, soft card only */
+#contact .close{border:0!important}
 #cinematic-experience .cinematic-photo-caption{color:#fff!important;font-weight:400!important;font-size:13px!important;opacity:1!important;text-shadow:0 1px 3px rgba(0,0,0,.75),0 0 10px rgba(0,0,0,.45)!important}
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -1955,7 +1949,7 @@ h1,h2,h3,h4{text-wrap:balance}
 </section>
 
 <section class="slide contact" id="contact" aria-labelledby="contact-title">
-  <div class="wrap close"><span class="frame-orn" aria-hidden="true"><svg viewBox="0 0 120 20"><g fill="none" stroke="#af8a40" stroke-width="1.2" stroke-linecap="round"><path d="M4 10h34M82 10h34"/><path d="M60 2l8 8-8 8-8-8z" fill="#f6ecd6"/><circle cx="44" cy="10" r="1.6" fill="#af8a40"/><circle cx="76" cy="10" r="1.6" fill="#af8a40"/></g></svg></span><span class="frame-orn bot" aria-hidden="true"><svg viewBox="0 0 120 20"><g fill="none" stroke="#af8a40" stroke-width="1.2" stroke-linecap="round"><path d="M4 10h34M82 10h34"/><path d="M60 2l8 8-8 8-8-8z" fill="#f6ecd6"/><circle cx="44" cy="10" r="1.6" fill="#af8a40"/><circle cx="76" cy="10" r="1.6" fill="#af8a40"/></g></svg></span>
+  <div class="wrap close">
     <div class="bubbles" aria-hidden="true"><i class="b g" style="--x:0.9%;--d:-3.3s;--w:14px;--t:22.3s"></i><i class="b" style="--x:6.5%;--d:-6.6s;--w:6px;--t:18.2s"></i><i class="b" style="--x:12.9%;--d:-9.3s;--w:6px;--t:20.9s"></i><i class="b" style="--x:18.5%;--d:-15.7s;--w:4px;--t:18.6s"></i><i class="b g" style="--x:25.1%;--d:-7.1s;--w:12px;--t:18.0s"></i><i class="b g" style="--x:28.6%;--d:-1.2s;--w:12px;--t:14.6s"></i><i class="b" style="--x:32.8%;--d:-10.8s;--w:6px;--t:15.1s"></i><i class="b" style="--x:37.7%;--d:-17.1s;--w:6px;--t:19.4s"></i><i class="b" style="--x:45.1%;--d:-11.1s;--w:5px;--t:22.7s"></i><i class="b" style="--x:48.6%;--d:-10.8s;--w:8px;--t:23.6s"></i><i class="b" style="--x:55.2%;--d:-17.9s;--w:5px;--t:22.5s"></i><i class="b g" style="--x:60.5%;--d:-2.6s;--w:14px;--t:17.1s"></i><i class="b" style="--x:67.0%;--d:-12.5s;--w:8px;--t:18.8s"></i><i class="b" style="--x:71.4%;--d:-9.5s;--w:7px;--t:23.5s"></i><i class="b" style="--x:75.3%;--d:-5.4s;--w:4px;--t:21.6s"></i><i class="b" style="--x:82.6%;--d:-4.7s;--w:5px;--t:21.0s"></i><i class="b" style="--x:86.8%;--d:-4.0s;--w:6px;--t:17.6s"></i><i class="b g" style="--x:92.8%;--d:-11.0s;--w:10px;--t:20.4s"></i></div>
     <div class="close-main">
       <svg class="toast" viewBox="0 0 240 200" aria-hidden="true">
