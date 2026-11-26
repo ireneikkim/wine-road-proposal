@@ -1450,6 +1450,11 @@ h1,h2,h3,h4{text-wrap:balance}
 @media (max-width:899px){#hero-pause{bottom:54px!important}.kv-line{bottom:16px!important}#hero-scene{right:20px;bottom:20px}}
 .kv.has-film>.kv-cap,.kv.has-film #kvcap{display:none!important}
 @media (max-width:899px){.slide.hero .kv .kv-desc{line-height:1.6!important}}
+
+/* 2026-11-26 stats centered */
+.stats>div,.stats>div:first-child,.stats>div:nth-child(even){text-align:center;justify-items:center;padding-left:12px!important;padding-right:12px!important}
+/* hero slide must never scroll internally (focus moving into clipped .about scrolled it) */
+.slide.hero.kvh{overflow:clip!important}
 #cinematic-experience .cinematic-photo-caption{color:#fff!important;font-weight:400!important;font-size:13px!important;opacity:1!important;text-shadow:0 1px 3px rgba(0,0,0,.75),0 0 10px rgba(0,0,0,.45)!important}
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -2220,4 +2225,4 @@ addEventListener('resize',fit);addEventListener('load',fit);document.fonts&&docu
 function fit(){c.style.marginTop='';j.style.alignItems='';if(innerWidth<900)return;j.style.alignItems='start';const f=c.querySelector('.phone-frame');c.style.marginTop=Math.max(0,st.getBoundingClientRect().top-c.getBoundingClientRect().top-(f?f.getBoundingClientRect().top-c.getBoundingClientRect().top:0))+'px'}
 addEventListener('resize',fit);addEventListener('load',fit);document.fonts&&document.fonts.ready.then(fit);fit();})();</script>
 <script>(()=>{const h=document.getElementById('hero-film'),c=document.getElementById('hero-scene');if(!h||!c)return;const n=['Château Margaux','Hospices de Beaune','Fantini Wines','Fantini Wines',''];const u=()=>{const t=n[Math.min(4,Math.floor((h.currentTime||0)/2))];if(c.textContent!==t)c.textContent=t};h.addEventListener('timeupdate',u);h.addEventListener('playing',u)})()</script>
-</body></html>
+<script>(()=>{const s=document.querySelector('.slide.hero.kvh');if(!s)return;const r=()=>{if(s.scrollTop||s.scrollLeft){s.scrollTop=0;s.scrollLeft=0}};s.addEventListener('scroll',r);document.addEventListener('focusin',r,true)})()</script></body></html>
