@@ -1499,6 +1499,11 @@ h1,h2,h3,h4{text-wrap:balance}
 #journey .phone-frame{background:none!important;overflow:visible!important;border-radius:0!important;width:100%!important;height:100%!important;aspect-ratio:auto!important}
 #journey .phone-frame::after{display:none!important}
 #journey .phone-frame img{position:static!important;width:100%!important;height:100%!important;object-fit:contain;border-radius:0!important}
+
+/* Why Now stats: no box lines, breathing room */
+.stats,.stats>div,.stats>div:nth-child(even),.stats>div:nth-child(n+3){border:0!important}
+.stats-src{margin:14px 0 44px!important;text-align:center}
+@media (max-width:760px){.stats-src{margin:10px 0 32px!important}}
 #cinematic-experience .cinematic-photo-caption{color:#fff!important;font-weight:400!important;font-size:13px!important;opacity:1!important;text-shadow:0 1px 3px rgba(0,0,0,.75),0 0 10px rgba(0,0,0,.45)!important}
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
