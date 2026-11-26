@@ -1504,6 +1504,13 @@ h1,h2,h3,h4{text-wrap:balance}
 .stats,.stats>div,.stats>div:nth-child(even),.stats>div:nth-child(n+3){border:0!important}
 .stats-src{margin:14px 0 44px!important;text-align:center}
 @media (max-width:760px){.stats-src{margin:10px 0 32px!important}}
+
+/* Why Now: dark line above stats (same gap as What I Do), rounded stat boxes, no line above cards */
+#market .stats{border-top:1px solid var(--ink)!important;margin-top:68px!important;padding-top:32px;gap:16px}
+#market .stats>div,#market .stats>div:first-child,#market .stats>div:nth-child(even),#market .stats>div:nth-child(n+3){border:1px solid rgba(176,141,87,.35)!important;border-radius:16px;padding:22px 12px 18px!important;background:rgba(255,255,255,.35)}
+#market .stats-src{margin:16px 0 20px!important}
+#market .factors{border-top:0!important}
+@media (max-width:760px){#market .stats{margin-top:34px!important;padding-top:24px;gap:10px}#market .stats>div,#market .stats>div:first-child,#market .stats>div:nth-child(even),#market .stats>div:nth-child(n+3){padding:16px 8px 14px!important;border-radius:14px}#market .stats-src{margin:12px 0 12px!important}}
 #cinematic-experience .cinematic-photo-caption{color:#fff!important;font-weight:400!important;font-size:13px!important;opacity:1!important;text-shadow:0 1px 3px rgba(0,0,0,.75),0 0 10px rgba(0,0,0,.45)!important}
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
