@@ -1511,6 +1511,15 @@ h1,h2,h3,h4{text-wrap:balance}
 #market .stats-src{margin:16px 0 20px!important}
 #market .factors{border-top:0!important}
 @media (max-width:760px){#market .stats{margin-top:34px!important;padding-top:24px;gap:10px}#market .stats>div,#market .stats>div:first-child,#market .stats>div:nth-child(even),#market .stats>div:nth-child(n+3){padding:16px 8px 14px!important;border-radius:14px}#market .stats-src{margin:12px 0 12px!important}}
+
+/* closing card: Santé + contact in one soft champagne card, footer below */
+.slide.contact.contact::after{display:none}
+#contact .close{width:min(calc(100% - 2*var(--gutter,24px)),1136px);margin-inline:auto;overflow:hidden;border:1px solid rgba(175,138,64,.28);border-radius:28px;padding:clamp(48px,6vw,80px) clamp(28px,6vw,80px);background:radial-gradient(ellipse 80% 90% at 20% 30%,#fffdf8 0%,#f8f1e3 55%,#f1e5cc 100%);box-shadow:0 30px 60px -40px rgba(120,90,40,.35);align-items:center!important}
+#contact .close::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.55) 50%,transparent 65%);background-size:250% 100%;animation:silk 9s ease-in-out infinite;border-radius:inherit}
+#contact .close>.bubbles{z-index:0}
+#contact .close>.close-main,#contact .close>.close-card{position:relative;z-index:1}
+#contact .close-foot{grid-column:auto;margin:28px auto 0;border:0!important;padding:0;text-align:center;max-width:none;color:var(--ink-2);font-size:12px;letter-spacing:.04em}
+@media (max-width:760px){#contact .close{width:calc(100% - 32px);border-radius:22px;padding:40px 24px}#contact .close>.bubbles{display:block}}
 #cinematic-experience .cinematic-photo-caption{color:#fff!important;font-weight:400!important;font-size:13px!important;opacity:1!important;text-shadow:0 1px 3px rgba(0,0,0,.75),0 0 10px rgba(0,0,0,.45)!important}
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -1933,8 +1942,8 @@ h1,h2,h3,h4{text-wrap:balance}
 </section>
 
 <section class="slide contact" id="contact" aria-labelledby="contact-title">
-  <div class="bubbles" aria-hidden="true"><i class="b g" style="--x:0.9%;--d:-3.3s;--w:14px;--t:22.3s"></i><i class="b" style="--x:6.5%;--d:-6.6s;--w:6px;--t:18.2s"></i><i class="b" style="--x:12.9%;--d:-9.3s;--w:6px;--t:20.9s"></i><i class="b" style="--x:18.5%;--d:-15.7s;--w:4px;--t:18.6s"></i><i class="b g" style="--x:25.1%;--d:-7.1s;--w:12px;--t:18.0s"></i><i class="b g" style="--x:28.6%;--d:-1.2s;--w:12px;--t:14.6s"></i><i class="b" style="--x:32.8%;--d:-10.8s;--w:6px;--t:15.1s"></i><i class="b" style="--x:37.7%;--d:-17.1s;--w:6px;--t:19.4s"></i><i class="b" style="--x:45.1%;--d:-11.1s;--w:5px;--t:22.7s"></i><i class="b" style="--x:48.6%;--d:-10.8s;--w:8px;--t:23.6s"></i><i class="b" style="--x:55.2%;--d:-17.9s;--w:5px;--t:22.5s"></i><i class="b g" style="--x:60.5%;--d:-2.6s;--w:14px;--t:17.1s"></i><i class="b" style="--x:67.0%;--d:-12.5s;--w:8px;--t:18.8s"></i><i class="b" style="--x:71.4%;--d:-9.5s;--w:7px;--t:23.5s"></i><i class="b" style="--x:75.3%;--d:-5.4s;--w:4px;--t:21.6s"></i><i class="b" style="--x:82.6%;--d:-4.7s;--w:5px;--t:21.0s"></i><i class="b" style="--x:86.8%;--d:-4.0s;--w:6px;--t:17.6s"></i><i class="b g" style="--x:92.8%;--d:-11.0s;--w:10px;--t:20.4s"></i></div>
   <div class="wrap close">
+    <div class="bubbles" aria-hidden="true"><i class="b g" style="--x:0.9%;--d:-3.3s;--w:14px;--t:22.3s"></i><i class="b" style="--x:6.5%;--d:-6.6s;--w:6px;--t:18.2s"></i><i class="b" style="--x:12.9%;--d:-9.3s;--w:6px;--t:20.9s"></i><i class="b" style="--x:18.5%;--d:-15.7s;--w:4px;--t:18.6s"></i><i class="b g" style="--x:25.1%;--d:-7.1s;--w:12px;--t:18.0s"></i><i class="b g" style="--x:28.6%;--d:-1.2s;--w:12px;--t:14.6s"></i><i class="b" style="--x:32.8%;--d:-10.8s;--w:6px;--t:15.1s"></i><i class="b" style="--x:37.7%;--d:-17.1s;--w:6px;--t:19.4s"></i><i class="b" style="--x:45.1%;--d:-11.1s;--w:5px;--t:22.7s"></i><i class="b" style="--x:48.6%;--d:-10.8s;--w:8px;--t:23.6s"></i><i class="b" style="--x:55.2%;--d:-17.9s;--w:5px;--t:22.5s"></i><i class="b g" style="--x:60.5%;--d:-2.6s;--w:14px;--t:17.1s"></i><i class="b" style="--x:67.0%;--d:-12.5s;--w:8px;--t:18.8s"></i><i class="b" style="--x:71.4%;--d:-9.5s;--w:7px;--t:23.5s"></i><i class="b" style="--x:75.3%;--d:-5.4s;--w:4px;--t:21.6s"></i><i class="b" style="--x:82.6%;--d:-4.7s;--w:5px;--t:21.0s"></i><i class="b" style="--x:86.8%;--d:-4.0s;--w:6px;--t:17.6s"></i><i class="b g" style="--x:92.8%;--d:-11.0s;--w:10px;--t:20.4s"></i></div>
     <div class="close-main">
       <svg class="toast" viewBox="0 0 240 200" aria-hidden="true">
         <g fill="none" stroke="#af8a40" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1956,8 +1965,8 @@ h1,h2,h3,h4{text-wrap:balance}
         <li><svg class="ic"><use href="#i-call"/></svg><span>전화</span><a href="tel:+821059293100">010 5929 3100</a></li>
       </ul>
     </div>
-    <p class="foot">© 2026 KIM INKYUNG, all rights reserved.</p>
   </div>
+  <p class="foot close-foot">© 2026 KIM INKYUNG, all rights reserved.</p>
 </section>
 </main>
 
