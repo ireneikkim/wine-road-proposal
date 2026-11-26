@@ -1469,7 +1469,13 @@ h1,h2,h3,h4{text-wrap:balance}
 :root{--sec-sp:100px}
 @media (max-width:899px){:root{--sec-sp:72px}}
 #market.slide{padding-top:var(--sec-sp)!important;padding-bottom:var(--sec-sp)!important}
-#list.slide.slide.slide,#pages.slide.slide.slide,#profile.slide.slide.slide,#app-bourgogne.slide.slide.slide{padding-bottom:0!important}
+/* one light background; neighbouring content sections share one gap with a thin divider */
+.slide.alt{background:var(--paper)!important}
+:root{--div-sp:64px}
+@media (max-width:899px){:root{--div-sp:48px}}
+.slide:not(.hero):not(.contact):not(.cinematic-chapter):has(+ .slide:not(.hero):not(.contact):not(.cinematic-chapter)){padding-bottom:var(--div-sp)!important}
+.slide:not(.hero):not(.contact):not(.cinematic-chapter) + .slide:not(.hero):not(.contact):not(.cinematic-chapter){padding-top:var(--div-sp)!important;position:relative}
+.slide:not(.hero):not(.contact):not(.cinematic-chapter) + .slide:not(.hero):not(.contact):not(.cinematic-chapter)::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:calc(min(100%,1080px) - var(--gut-l) - var(--gut-r));height:1px;background:var(--line);pointer-events:none}
 #cinematic-experience .cinematic-photo-caption{color:#fff!important;font-weight:400!important;font-size:13px!important;opacity:1!important;text-shadow:0 1px 3px rgba(0,0,0,.75),0 0 10px rgba(0,0,0,.45)!important}
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
