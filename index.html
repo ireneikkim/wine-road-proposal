@@ -1542,6 +1542,14 @@ h1,h2,h3,h4{text-wrap:balance}
 #journey .journey .steps{grid-column:1;grid-row:2}
 #journey .journey>div:last-child{grid-column:2;grid-row:2;justify-self:center}
 }
+
+/* journey: spotlight the wine app (During item + soft halo behind the phone) */
+#journey .steps li:nth-child(2){margin:4px 0 30px;padding:18px 22px 20px 30px;border-radius:0 16px 16px 0;background:linear-gradient(90deg,#f5ecda 0%,rgba(245,236,218,.55) 70%,rgba(245,236,218,0) 100%)}
+#journey .steps li:nth-child(2)::before{top:28px;width:13px;height:13px;left:-7px;box-shadow:0 0 0 5px rgba(176,141,87,.18)}
+#journey .steps li:nth-child(2) h3{color:#6e1f2e}
+#journey .steps li:nth-child(2) .ic{stroke:#6e1f2e}
+#journey .phone{position:relative;isolation:isolate}
+#journey .phone::before{content:"";position:absolute;inset:-14% -38%;z-index:-1;border-radius:50%;background:radial-gradient(closest-side,rgba(233,214,175,.55),rgba(233,214,175,.22) 55%,rgba(233,214,175,0) 100%);pointer-events:none}
 #cinematic-experience .cinematic-photo-caption{color:#fff!important;font-weight:400!important;font-size:13px!important;opacity:1!important;text-shadow:0 1px 3px rgba(0,0,0,.75),0 0 10px rgba(0,0,0,.45)!important}
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
