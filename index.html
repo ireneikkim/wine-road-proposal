@@ -2500,10 +2500,7 @@ const io=new IntersectionObserver(es=>es.forEach(e=>{const r=e.intersectionRatio
 io.observe(tf);
 /* any manual navigation while the film plays cancels the auto-advance */
 const cancel=()=>{if(!f.paused)advance=false};
-addEventListener('wheel',cancel,{passive:true});addEventListener('touchmove',cancel,{passive:true});
-addEventListener('keydown',e=>{if(/^(Arrow|Page|Home|End| )/.test(e.key))cancel()});
-f.addEventListener('pause',()=>{if(!f.ended&&!pausedByUs)advance=false});
-f.addEventListener('ended',()=>{snd.hidden=true;if(!advance||!inView||!list)return;advance=false;
+f.addEventListener('ended',()=>{snd.hidden=true;const rr=tf.getBoundingClientRect(),vis=(Math.min(innerHeight,rr.bottom)-Math.max(0,rr.top))/rr.height;if(vis<.5||!list)return;
  setTimeout(()=>{const H=(document.querySelector('header')?.getBoundingClientRect().bottom)||0;const nt=document.querySelector('#signature-trip .trip-note'),a=list.getBoundingClientRect(),ht=(nt?nt.getBoundingClientRect().bottom:a.bottom)-a.top,av=innerHeight-H;const y=ht<=av-16?a.top+scrollY-H-(av-ht)/2:a.top+scrollY-H-40;
   if(window.__ppt&&matchMedia('(min-width:900px)').matches)window.__ppt.animateTo(y);else scrollTo({top:y,behavior:'smooth'})},900)});
 })();</script>
