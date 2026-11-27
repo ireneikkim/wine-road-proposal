@@ -2363,27 +2363,46 @@ const orig=Element.prototype.scrollIntoView;
 Element.prototype.scrollIntoView=function(o){if(ok(this)&&(o===undefined||o===true||(o&&(o.block===undefined||o.block==='start')))){go(this,!(o&&o.behavior==='auto'));return}return orig.apply(this,arguments)};
 document.addEventListener('click',e=>{const a=e.target.closest&&e.target.closest('a[href^="#"]');if(!a)return;const id=a.getAttribute('href');if(id.length<2||id.startsWith('#app-'))return;let el=document.querySelector(id);const hh=el&&el.closest&&el.closest('.slide.hero');if(hh){el=hh.nextElementSibling;while(el&&!(el.classList&&el.classList.contains('slide')))el=el.nextElementSibling}if(!ok(el))return;e.preventDefault();go(el,true);history.replaceState(null,'',id)},true);
 })();</script>
-<script>(()=>{/* PC: slide-by-slide navigation (wheel / keys), long sections scroll inside first */
+<script>(()=>{/* PC: slide-by-slide navigation v2 - one step per wheel/trackpad gesture (inertia-aware), own rAF animation */
 const MQ=matchMedia('(min-width:900px)');
 const secs=()=>[...document.querySelectorAll('main > section.slide')].filter(s=>s.getBoundingClientRect().height>0);
 const headH=()=>{const h=document.querySelector('header');return h?h.getBoundingClientRect().bottom:0};
-function box(s){const r=s.getBoundingClientRect();if(s.classList.contains('hero')||s.classList.contains('cinematic-chapter'))return{top:r.top,bottom:r.bottom};const cs=getComputedStyle(s);return{top:r.top+parseFloat(cs.paddingTop),bottom:r.bottom-parseFloat(cs.paddingBottom)}}
+const isFull=s=>s.classList.contains('hero')||s.classList.contains('cinematic-chapter');
+function box(s){const r=s.getBoundingClientRect();if(isFull(s))return{top:r.top,bottom:r.bottom};const cs=getComputedStyle(s);return{top:r.top+parseFloat(cs.paddingTop),bottom:r.bottom-parseFloat(cs.paddingBottom)}}
+function landing(s){if(s.classList.contains('hero'))return 0;const r=s.getBoundingClientRect(),H=headH(),avail=innerHeight-H;if(s.classList.contains('cinematic-chapter'))return r.top+scrollY-H;const b=box(s),ht=b.bottom-b.top;if(ht<=avail-16)return Math.round(b.top+scrollY-H-(avail-ht)/2);return Math.round(b.top+scrollY-H-40)}
 function current(L){const mid=(headH()+innerHeight)/2;let best=0,bd=1e9;L.forEach((s,i)=>{const r=s.getBoundingClientRect();if(r.top<=mid&&r.bottom>=mid){bd=-1;best=i}else if(bd>=0){const d=Math.min(Math.abs(r.top-mid),Math.abs(r.bottom-mid));if(d<bd){bd=d;best=i}}});return best}
-let lock=0;const LOCK=950;
-function step(dir){const L=secs();if(!L.length)return;const i=current(L),s=L[i],b=box(s),H=headH(),vh=innerHeight-H,pad=28,full=s.classList.contains('hero')||s.classList.contains('cinematic-chapter');
- if(!full&&dir>0&&b.bottom>innerHeight-pad+80){scrollTo({top:scrollY+Math.min(b.bottom-(innerHeight-pad),vh*.85),behavior:'smooth'});return}
- if(!full&&dir<0&&b.top<H+pad-80){scrollTo({top:scrollY-Math.min((H+pad)-b.top,vh*.85),behavior:'smooth'});return}
+/* animation */
+let raf=0,animEnd=0;const busy=()=>raf!==0;
+const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+function stop(){if(raf){cancelAnimationFrame(raf);raf=0;animEnd=performance.now()}}
+function animateTo(y){stop();const max=document.documentElement.scrollHeight-innerHeight;y=Math.max(0,Math.min(max,Math.round(y)));const from=scrollY,d=y-from;if(Math.abs(d)<2)return;const dur=Math.max(520,Math.min(820,420+Math.abs(d)*.3)),t0=performance.now();
+ const f=now=>{const t=Math.min(1,(now-t0)/dur);scrollTo({top:from+d*ease(t),behavior:'instant'});if(t<1)raf=requestAnimationFrame(f);else{raf=0;animEnd=performance.now()}};raf=requestAnimationFrame(f)}
+function step(dir){const L=secs();if(!L.length)return;const i=current(L),s=L[i],b=box(s),H=headH(),vh=innerHeight-H,pad=28,full=isFull(s);
+ if(!full&&dir>0&&b.bottom>innerHeight-pad+80){animateTo(scrollY+Math.min(b.bottom-(innerHeight-pad),vh*.85));return}
+ if(!full&&dir<0&&b.top<H+pad-80){animateTo(scrollY-Math.min((H+pad)-b.top,vh*.85));return}
  const n=L[i+dir];if(!n)return;
- if(n.classList.contains('hero')){scrollTo({top:0,behavior:'smooth'});return}
- if(dir<0){const nb=box(n),ht=nb.bottom-nb.top;if(ht>vh-2*pad+80&&!n.classList.contains('cinematic-chapter')){scrollTo({top:scrollY+nb.bottom-(innerHeight-pad),behavior:'smooth'});return}}
- n.scrollIntoView();}
-function go(dir){const t=Date.now();if(t<lock)return true;lock=t+LOCK;step(dir);return true}
-function blocked(e){if(!MQ.matches||e.ctrlKey||e.metaKey)return true;const f=document.getElementById('full-film');if(f&&!f.hidden&&f.getBoundingClientRect().height>0)return true;const m=document.querySelector('[role=dialog]:not([hidden]),dialog[open]');if(m)return true;return false}
+ if(dir<0&&!isFull(n)){const nb=box(n);if(nb.bottom-nb.top>vh-2*pad+80){animateTo(scrollY+nb.bottom-(innerHeight-pad));return}}
+ animateTo(landing(n))}
+function blocked(e){if(!MQ.matches||e.ctrlKey||e.metaKey)return true;const f=document.getElementById('full-film');if(f&&!f.hidden&&f.getBoundingClientRect().height>0)return true;if(document.querySelector('[role=dialog]:not([hidden]),dialog[open]'))return true;return false}
 function innerScrollable(el,dy){for(let n=el;n&&n!==document.body&&n!==document.documentElement;n=n.parentElement){const cs=getComputedStyle(n);if(/(auto|scroll)/.test(cs.overflowY)&&n.scrollHeight>n.clientHeight+1){if(dy>0&&n.scrollTop+n.clientHeight<n.scrollHeight-1)return true;if(dy<0&&n.scrollTop>0)return true}}return false}
-let acc=0,accT=0;
-addEventListener('wheel',e=>{if(blocked(e))return;if(Math.abs(e.deltaX)>Math.abs(e.deltaY))return;if(innerScrollable(e.target,e.deltaY))return;e.preventDefault();const t=Date.now();if(t<lock){lock=Math.max(lock,t+180);return}if(t-accT>250)acc=0;accT=t;acc+=e.deltaY;if(Math.abs(acc)<24)return;const d=acc>0?1:-1;acc=0;go(d)},{passive:false});
+/* gesture detection: a gesture = a stream of wheel events without a 240ms pause, in one direction.
+   Trackpad inertia keeps the stream alive with decaying deltas, so it never triggers a second step.
+   A fresh flick inside the inertia tail is recognised by a clear jump in delta size. */
+let lastT=0,used=false,gdir=0,acc=0,hist=[];
+addEventListener('wheel',e=>{if(blocked(e))return;let dy=e.deltaY,dx=e.deltaX;if(e.deltaMode===1){dy*=16;dx*=16}else if(e.deltaMode===2){dy*=innerHeight;dx*=innerHeight}
+ if(Math.abs(dx)>Math.abs(dy))return;if(innerScrollable(e.target,dy))return;e.preventDefault();if(!dy)return;
+ const now=performance.now(),gap=now-lastT;lastT=now;const dir=dy>0?1:-1,ad=Math.abs(dy);
+ let fresh=gap>240||(dir!==gdir&&ad>4);
+ if(!fresh&&used&&!busy()&&now-animEnd>120&&hist.length>=4){const avg=hist.slice(-4).reduce((x,y)=>x+y,0)/4;if(ad>avg*1.8&&ad>12)fresh=true}
+ if(fresh){used=false;acc=0;hist=[];gdir=dir}
+ hist.push(ad);if(hist.length>12)hist.shift();
+ if(used||busy())return;
+ acc+=dy;if(Math.abs(acc)<28)return;used=true;acc=0;step(dir)},{passive:false});
 addEventListener('keydown',e=>{if(blocked(e)||e.altKey)return;const tg=e.target;if(tg&&(/^(INPUT|TEXTAREA|SELECT|VIDEO)$/.test(tg.tagName)||tg.isContentEditable))return;let d=0;
  if(e.key==='ArrowDown'||e.key==='PageDown'||(e.key===' '&&!e.shiftKey&&!/^(BUTTON|A)$/.test(tg.tagName)))d=1;else if(e.key==='ArrowUp'||e.key==='PageUp'||(e.key===' '&&e.shiftKey))d=-1;
- if(!d)return;e.preventDefault();go(d)});
+ if(!d)return;e.preventDefault();if(busy()||e.repeat&&performance.now()-animEnd<150)return;step(d)});
+/* any other way of scrolling (links, scrollbar, touch) cancels our animation */
+['mousedown','touchstart'].forEach(t=>addEventListener(t,stop,{passive:true}));
+document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('a[href^="#"]'))stop()},true);
 })();</script>
 </body></html>
