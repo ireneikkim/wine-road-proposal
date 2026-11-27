@@ -1639,6 +1639,12 @@ section[aria-labelledby="caps-title"] .caps{margin-bottom:calc(-1 * clamp(28px,4
 #signature-trip .trip-table thead :is(th,td){padding-top:4px!important;padding-bottom:6px!important}
 #signature-trip .trip-note{margin-top:12px}
 }
+/* digital guide auto-cycle: progress line under the active choice */
+#app-bourgogne .guide-choices button{position:relative}
+#app-bourgogne .gd-bar{position:absolute;left:0;right:0;bottom:-1px;height:2px;background:#b08d57;transform:scaleX(0);transform-origin:left;pointer-events:none;opacity:0}
+#app-bourgogne .gd-run .gd-bar{opacity:1;animation:gdBar var(--gd,5.5s) linear forwards}
+@keyframes gdBar{to{transform:scaleX(1)}}
+@media (prefers-reduced-motion:reduce){#app-bourgogne .gd-bar{display:none}}
 #cinematic-experience .cinematic-photo-caption{color:#fff!important;font-weight:400!important;font-size:13px!important;opacity:1!important;text-shadow:0 1px 3px rgba(0,0,0,.75),0 0 10px rgba(0,0,0,.45)!important}
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -2528,10 +2534,23 @@ if(!('IntersectionObserver' in window)||matchMedia('(prefers-reduced-motion:redu
 const st=document.querySelector('.stats');
 if(st){const items=[...st.querySelectorAll('b')].map(b=>{const tn=[...b.childNodes].find(n=>n.nodeType===3&&n.textContent.trim());if(!tn)return null;const txt=tn.textContent.trim(),val=parseFloat(txt.replace(/,/g,'')),dec=(txt.split('.')[1]||'').length;const sp=document.createElement('span');sp.className='num';sp.textContent=txt;b.replaceChild(sp,tn);return{sp,val,dec,txt}}).filter(Boolean);
  let raf=0;const fix=()=>items.forEach(it=>{it.sp.style.width='';it.sp.style.width=it.sp.getBoundingClientRect().width+'px'});
- const run=()=>{cancelAnimationFrame(raf);fix();const t0=performance.now();const f=now=>{let done=true;items.forEach((it,i)=>{const t=Math.min(1,Math.max(0,(now-t0-i*80)/800));if(t<1)done=false;const e=1-Math.pow(1-t,3);it.sp.textContent=t>=1?it.txt:(it.val*e).toFixed(it.dec)});if(!done)raf=requestAnimationFrame(f)};raf=requestAnimationFrame(f)};
+ const run=()=>{cancelAnimationFrame(raf);fix();const t0=performance.now();const f=now=>{let done=true;items.forEach((it,i)=>{const t=Math.min(1,Math.max(0,(now-t0-i*50)/500));if(t<1)done=false;const e=1-Math.pow(1-t,3);it.sp.textContent=t>=1?it.txt:(it.val*e).toFixed(it.dec)});if(!done)raf=requestAnimationFrame(f)};raf=requestAnimationFrame(f)};
  let shown=false;new IntersectionObserver(es=>es.forEach(e=>{if(e.intersectionRatio>=.3&&!shown){shown=true;run()}else if(e.intersectionRatio===0){shown=false;cancelAnimationFrame(raf);items.forEach(it=>it.sp.textContent=it.txt)}}),{threshold:[0,.3]}).observe(st);
  addEventListener('resize',()=>{items.forEach(it=>{it.sp.style.width=''})});}
 const tg=document.querySelector('.toast');
 if(tg)new IntersectionObserver(es=>es.forEach(e=>{if(e.intersectionRatio>=.8)tg.classList.add('clink');else if(e.intersectionRatio===0)tg.classList.remove('clink')}),{threshold:[0,.8]}).observe(tg);
+})();</script>
+<script>(()=>{/* digital guide: cycle map -> info -> quiz, Bourgogne then Bordeaux, until the visitor takes over */
+const sec=document.getElementById('app-bourgogne');if(!sec||!('IntersectionObserver' in window))return;
+const STEP=5500,tabs=[...sec.querySelectorAll('.guide-tabs [role=tab]')];if(!tabs.length)return;
+const seq=[];tabs.forEach(t=>{const panel=document.getElementById(t.getAttribute('aria-controls'));if(!panel)return;[...panel.querySelectorAll('.guide-choices button')].forEach(b=>{seq.push({t,b});if(!b.querySelector('.gd-bar')){const i=document.createElement('i');i.className='gd-bar';i.setAttribute('aria-hidden','true');b.appendChild(i)}})});
+let k=0,tm=0,inView=false,stopped=false;
+function bars(on){seq.forEach(x=>x.b.classList.remove('gd-run'));if(on){const b=seq[k].b;void b.offsetWidth;b.style.setProperty('--gd',STEP+'ms');b.classList.add('gd-run')}}
+function show(i){k=i;const {t,b}=seq[k];const y=scrollY;if(t.getAttribute('aria-selected')!=='true')t.click();if(b.getAttribute('aria-pressed')!=='true')b.click();if(Math.abs(scrollY-y)>1)scrollTo({top:y,behavior:'instant'});if(document.activeElement&&sec.contains(document.activeElement))document.activeElement.blur()}
+function tick(){clearTimeout(tm);if(!inView||stopped){bars(false);return}bars(true);tm=setTimeout(()=>{if(!inView||stopped)return;show((k+1)%seq.length);tick()},STEP)}
+new IntersectionObserver(es=>es.forEach(e=>{if(e.intersectionRatio>=.55){if(!inView){inView=true;stopped=false;show(0);tick()}}else if(e.intersectionRatio<.2&&inView){inView=false;clearTimeout(tm);bars(false)}}),{threshold:[0,.2,.55]}).observe(sec);
+const takeOver=e=>{if(!e.isTrusted)return;stopped=true;clearTimeout(tm);bars(false)};
+sec.addEventListener('click',takeOver,true);sec.addEventListener('touchstart',takeOver,{capture:true,passive:true});
+sec.addEventListener('keydown',e=>{if(/^(Arrow|Enter| )/.test(e.key))takeOver(e)},true);
 })();</script>
 </body></html>
