@@ -2461,4 +2461,15 @@ f.addEventListener('ended',()=>{snd.hidden=true;if(!advance||!inView||!list)retu
  setTimeout(()=>{const H=(document.querySelector('header')?.getBoundingClientRect().bottom)||0;const y=list.getBoundingClientRect().top+scrollY-H-40;
   if(window.__ppt&&matchMedia('(min-width:900px)').matches)window.__ppt.animateTo(y);else scrollTo({top:y,behavior:'smooth'})},900)});
 })();</script>
+<script>(()=>{/* winery pages: show the label first, then open the recommended course automatically */
+const sec=document.getElementById('pages'),spread=document.getElementById('spread');if(!sec||!spread||!('IntersectionObserver' in window))return;
+const DELAY=2600;let tm=0,inView=false,manual=false;
+const isOpen=()=>!!spread.querySelector('.pg.l.trip-on');
+function arm(){clearTimeout(tm);if(!inView||manual)return;tm=setTimeout(()=>{if(!inView||manual||isOpen())return;const b=spread.querySelector('.pg.l .exp-open');if(b)b.click()},DELAY)}
+new IntersectionObserver(es=>es.forEach(e=>{if(e.intersectionRatio>=.55){if(!inView){inView=true;arm()}}else if(e.intersectionRatio<.2){inView=false;clearTimeout(tm)}}),{threshold:[0,.2,.55]}).observe(spread);
+/* a new page was rendered (prev/next, list, swipe): label first again */
+new MutationObserver(ms=>{if(ms.some(m=>[...m.addedNodes].some(n=>n.classList&&n.classList.contains('pg')&&n.classList.contains('l')))){manual=false;arm()}}).observe(spread,{childList:true});
+/* the visitor opened or closed it by hand: leave this page alone */
+spread.addEventListener('click',e=>{if(e.isTrusted){manual=true;clearTimeout(tm)}},true);
+})();</script>
 </body></html>
