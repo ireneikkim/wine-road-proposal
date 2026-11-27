@@ -1645,6 +1645,19 @@ section[aria-labelledby="caps-title"] .caps{margin-bottom:calc(-1 * clamp(28px,4
 #app-bourgogne .gd-run .gd-bar{opacity:1;animation:gdBar var(--gd,5.5s) linear forwards}
 @keyframes gdBar{to{transform:scaleX(1)}}
 @media (prefers-reduced-motion:reduce){#app-bourgogne .gd-bar{display:none}}
+/* Why Me (#expertise): no boxes, one dark rule under the subtitle like Why Now / What I Do */
+#expertise .credentials{border-top:1px solid var(--ink);padding-top:clamp(20px,3vh,32px);gap:clamp(32px,4vw,64px)}
+#expertise .cred-panel{background:none!important;border:0!important;padding:0!important;box-shadow:none!important}
+#expertise .cred-panel h3{font-family:var(--display);font-style:italic;font-weight:400;font-size:19px;color:var(--accent);text-align:left;margin:0 0 12px;letter-spacing:0}
+#expertise .cred-panel:not(.cred-education) .cred-certifications{align-content:start}
+#expertise .cred-degree{border-top:1px solid var(--line)}
+#expertise .labels.lang{margin-top:clamp(18px,2.6vh,28px);padding-top:clamp(16px,2.4vh,22px);border-top:1px solid var(--line);gap:clamp(32px,4vw,64px)}
+#expertise .labels.lang .label,#expertise .labels.lang .label div{border:0!important;background:none!important;box-shadow:none!important;outline:0!important}
+#expertise .labels.lang .label{padding:0!important}
+#expertise .labels.lang .label div{justify-content:flex-start;padding:0!important}
+#expertise .lead{margin-top:10px}
+#expertise .cred-logos img{mix-blend-mode:multiply}
+@media (min-width:900px){#expertise .cred-logos.cred-certifications img{height:112px}#expertise .cred-certifications figure{grid-template-rows:112px auto}#expertise .cred-schools figure{grid-template-rows:104px auto}#expertise .cred-schools figure img,#expertise .cred-schools figure:first-child img{height:104px}}
 #cinematic-experience .cinematic-photo-caption{color:#fff!important;font-weight:400!important;font-size:13px!important;opacity:1!important;text-shadow:0 1px 3px rgba(0,0,0,.75),0 0 10px rgba(0,0,0,.45)!important}
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
