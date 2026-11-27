@@ -1563,6 +1563,13 @@ section[aria-labelledby="caps-title"] .caps{margin-bottom:calc(-1 * clamp(28px,4
 
 /* PC guide: tighter gap under the tabs so the phone fits one screen */
 @media (min-width:900px){#app-bourgogne .guide-tabs{margin-bottom:28px!important}#app-bourgogne .sec-head{margin-bottom:44px!important}#app-bourgogne .guide-stage{padding-top:0!important;padding-bottom:0!important}}
+
+/* PC partnership: fill more of the screen so the gaps above/below shrink (~200px at 900 high) */
+@media (min-width:900px) and (min-height:640px){
+#partnership .sec-head{margin-bottom:clamp(68px,10vh,110px)!important}
+#partnership .pt-grid{row-gap:clamp(48px,10vh,110px)!important}
+#partnership .pt-grid>div{padding-top:clamp(32px,5vh,56px)!important}
+}
 #cinematic-experience .cinematic-photo-caption{color:#fff!important;font-weight:400!important;font-size:13px!important;opacity:1!important;text-shadow:0 1px 3px rgba(0,0,0,.75),0 0 10px rgba(0,0,0,.45)!important}
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
