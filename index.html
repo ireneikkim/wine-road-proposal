@@ -1603,6 +1603,10 @@ section[aria-labelledby="caps-title"] .caps{margin-bottom:calc(-1 * clamp(28px,4
 .film-sound svg{width:16px;height:16px}
 .film-sound[hidden]{display:none}
 @media (max-width:899px){.film-sound{top:10px;right:10px;padding:5px 10px;font-size:12px}}
+/* winery pages: auto-advance progress line */
+.pg-auto{position:absolute;left:0;bottom:0;z-index:9;height:2px;width:100%;background:rgba(210,176,106,.95);transform:scaleX(0);transform-origin:left;pointer-events:none;opacity:0;transition:opacity .3s}
+.pg-auto.run{opacity:1;animation:pgAuto var(--d,7s) linear forwards}
+@keyframes pgAuto{to{transform:scaleX(1)}}
 #cinematic-experience .cinematic-photo-caption{color:#fff!important;font-weight:400!important;font-size:13px!important;opacity:1!important;text-shadow:0 1px 3px rgba(0,0,0,.75),0 0 10px rgba(0,0,0,.45)!important}
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -2375,7 +2379,7 @@ addEventListener('resize',fit);addEventListener('load',fit);document.fonts&&docu
 <script>(()=>{const s=document.querySelector('.slide.hero.kvh');if(!s)return;const r=()=>{if(s.scrollTop||s.scrollLeft){s.scrollTop=0;s.scrollLeft=0}};s.addEventListener('scroll',r);document.addEventListener('focusin',r,true)})()</script><script>(()=>{/* in-page navigation: land with the section's content centred in the visible area */
 const head=()=>{const h=document.querySelector('header');return h?h.getBoundingClientRect().height:0};
 const ok=el=>el&&el.classList&&el.classList.contains('slide')&&!el.classList.contains('hero');
-function target(sec){const sr=sec.getBoundingClientRect(),cs=getComputedStyle(sec);
+function target(sec){const fv=sec.querySelector('#travel-film .film-visual');if(fv){const r=fv.getBoundingClientRect(),H=head(),avail=innerHeight-H;if(r.height<=avail-32)return Math.round(r.top+scrollY-H-(avail-r.height)/2)}const sr=sec.getBoundingClientRect(),cs=getComputedStyle(sec);
  const top=sr.top+scrollY+parseFloat(cs.paddingTop),ht=sr.height-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom),H=head(),avail=innerHeight-H;
  if(sec.classList.contains('cinematic-chapter'))return sr.top+scrollY-H;
  if(ht<=avail-16)return Math.round(top-H-(avail-ht)/2);
@@ -2399,9 +2403,11 @@ const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
 function stop(){if(raf){cancelAnimationFrame(raf);raf=0;animEnd=performance.now()}}
 function animateTo(y){stop();const max=document.documentElement.scrollHeight-innerHeight;y=Math.max(0,Math.min(max,Math.round(y)));const from=scrollY,d=y-from;if(Math.abs(d)<2)return;const dur=Math.max(520,Math.min(820,420+Math.abs(d)*.3)),t0=performance.now();
  const f=now=>{const t=Math.min(1,(now-t0)/dur);scrollTo({top:from+d*ease(t),behavior:'instant'});if(t<1)raf=requestAnimationFrame(f);else{raf=0;animEnd=performance.now()}};raf=requestAnimationFrame(f)}
+/* a section holding the journey film: never stop with the film cut off, stop with it centred instead */
+function fstop(s,from,to){const v=s.querySelector('#travel-film .film-visual');if(!v)return to;const r=v.getBoundingClientRect(),H=headH(),avail=innerHeight-H;if(r.height>avail-32)return to;const c=r.top+scrollY-H-(avail-r.height)/2;const lo=Math.min(from,to),hi=Math.max(from,to);if(c>lo+8&&c<hi-8)return c;const t=r.top+scrollY-to,bt=t+r.height;if(t<innerHeight&&bt>H&&(t<H||bt>innerHeight))return Math.abs(c-from)>8?c:to;if(t>=H&&bt<=innerHeight&&Math.abs(c-to)<avail*.3)return c;return to}
 function step(dir){const L=secs();if(!L.length)return;const i=current(L),s=L[i],b=box(s),H=headH(),vh=innerHeight-H,pad=28,full=isFull(s);
- if(!full&&dir>0&&b.bottom>innerHeight-pad+80){animateTo(scrollY+Math.min(b.bottom-(innerHeight-pad),vh*.85));return}
- if(!full&&dir<0&&b.top<H+pad-80){animateTo(scrollY-Math.min((H+pad)-b.top,vh*.85));return}
+ if(!full&&dir>0&&b.bottom>innerHeight-pad+80){animateTo(fstop(s,scrollY,scrollY+Math.min(b.bottom-(innerHeight-pad),vh*.85)));return}
+ if(!full&&dir<0&&b.top<H+pad-80){animateTo(fstop(s,scrollY,scrollY-Math.min((H+pad)-b.top,vh*.85)));return}
  const n=L[i+dir];if(!n)return;
  if(dir<0&&!isFull(n)){const nb=box(n);if(nb.bottom-nb.top>vh-2*pad+80){animateTo(scrollY+nb.bottom-(innerHeight-pad));return}}
  animateTo(landing(n))}
@@ -2461,15 +2467,26 @@ f.addEventListener('ended',()=>{snd.hidden=true;if(!advance||!inView||!list)retu
  setTimeout(()=>{const H=(document.querySelector('header')?.getBoundingClientRect().bottom)||0;const y=list.getBoundingClientRect().top+scrollY-H-40;
   if(window.__ppt&&matchMedia('(min-width:900px)').matches)window.__ppt.animateTo(y);else scrollTo({top:y,behavior:'smooth'})},900)});
 })();</script>
-<script>(()=>{/* winery pages: show the label first, then open the recommended course automatically */
+<script>(()=>{/* winery pages: label first, then the recommended course opens, then the next page turns automatically */
 const sec=document.getElementById('pages'),spread=document.getElementById('spread');if(!sec||!spread||!('IntersectionObserver' in window))return;
-const DELAY=2600;let tm=0,inView=false,manual=false;
+const LABEL=2600,READ=7000;let t1=0,t2=0,inView=false,manual=false,stopped=false;
 const isOpen=()=>!!spread.querySelector('.pg.l.trip-on');
-function arm(){clearTimeout(tm);if(!inView||manual)return;tm=setTimeout(()=>{if(!inView||manual||isOpen())return;const b=spread.querySelector('.pg.l .exp-open');if(b)b.click()},DELAY)}
-new IntersectionObserver(es=>es.forEach(e=>{if(e.intersectionRatio>=.55){if(!inView){inView=true;arm()}}else if(e.intersectionRatio<.2){inView=false;clearTimeout(tm)}}),{threshold:[0,.2,.55]}).observe(spread);
-/* a new page was rendered (prev/next, list, swipe): label first again */
+const nextBtn=()=>[...sec.querySelectorAll('button')].find(b=>/다음 장/.test(b.textContent));
+function bar(){let el=spread.querySelector(':scope>.pg-auto');if(!el){el=document.createElement('i');el.className='pg-auto';el.setAttribute('aria-hidden','true');spread.appendChild(el)}return el}
+function clearBar(){const el=spread.querySelector(':scope>.pg-auto');if(el){el.classList.remove('run')}}
+function clear(){clearTimeout(t1);clearTimeout(t2);clearBar()}
+function arm(){clear();if(!inView)return;
+ if(!manual&&!isOpen())t1=setTimeout(()=>{if(!inView||manual||isOpen())return;const b=spread.querySelector('.pg.l .exp-open');if(b)b.click();advance()},LABEL);
+ else advance()}
+function advance(){clearTimeout(t2);const n=nextBtn();if(stopped||!inView||!n||n.disabled)return;
+ const el=bar();el.classList.remove('run');void el.offsetWidth;el.style.setProperty('--d',READ+'ms');el.classList.add('run');
+ t2=setTimeout(()=>{if(stopped||!inView)return;const n=nextBtn();if(n&&!n.disabled)n.click()},READ)}
+new IntersectionObserver(es=>es.forEach(e=>{if(e.intersectionRatio>=.55){if(!inView){inView=true;arm()}}else if(e.intersectionRatio<.2&&inView){inView=false;stopped=false;clear()}}),{threshold:[0,.2,.55]}).observe(spread);
+/* a new page was rendered: label first again */
 new MutationObserver(ms=>{if(ms.some(m=>[...m.addedNodes].some(n=>n.classList&&n.classList.contains('pg')&&n.classList.contains('l')))){manual=false;arm()}}).observe(spread,{childList:true});
-/* the visitor opened or closed it by hand: leave this page alone */
-spread.addEventListener('click',e=>{if(e.isTrusted){manual=true;clearTimeout(tm)}},true);
+/* the visitor takes over: no more automatic page turns until they leave and come back */
+const takeOver=e=>{if(!e.isTrusted)return;stopped=true;clearTimeout(t2);clearBar();if(spread.contains(e.target)){manual=true;clearTimeout(t1)}};
+sec.addEventListener('click',takeOver,true);sec.addEventListener('touchstart',takeOver,{capture:true,passive:true});
+sec.addEventListener('keydown',e=>{if(/^Arrow(Left|Right)$/.test(e.key))takeOver(e)},true);
 })();</script>
 </body></html>
