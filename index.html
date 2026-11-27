@@ -2312,4 +2312,17 @@ addEventListener('resize',fit);addEventListener('load',fit);document.fonts&&docu
 function fit(){c.style.marginTop='';j.style.alignItems='';if(innerWidth<900)return;j.style.alignItems='start';const f=c.querySelector('.phone-frame');c.style.marginTop=Math.max(0,st.getBoundingClientRect().top-c.getBoundingClientRect().top-(f?f.getBoundingClientRect().top-c.getBoundingClientRect().top:0))+'px'}
 addEventListener('resize',fit);addEventListener('load',fit);document.fonts&&document.fonts.ready.then(fit);fit();})();</script>
 <script>(()=>{const h=document.getElementById('hero-film'),c=document.getElementById('hero-scene');if(!h||!c)return;const n=['Château Margaux','Hospices de Beaune','Fantini Wines','Fantini Wines',''];const u=()=>{const t=n[Math.min(4,Math.floor((h.currentTime||0)/2))];if(c.textContent!==t)c.textContent=t};h.addEventListener('timeupdate',u);h.addEventListener('playing',u)})()</script>
-<script>(()=>{const s=document.querySelector('.slide.hero.kvh');if(!s)return;const r=()=>{if(s.scrollTop||s.scrollLeft){s.scrollTop=0;s.scrollLeft=0}};s.addEventListener('scroll',r);document.addEventListener('focusin',r,true)})()</script></body></html>
+<script>(()=>{const s=document.querySelector('.slide.hero.kvh');if(!s)return;const r=()=>{if(s.scrollTop||s.scrollLeft){s.scrollTop=0;s.scrollLeft=0}};s.addEventListener('scroll',r);document.addEventListener('focusin',r,true)})()</script><script>(()=>{/* in-page navigation: land with the section's content centred in the visible area */
+const head=()=>{const h=document.querySelector('header');return h?h.getBoundingClientRect().height:0};
+const ok=el=>el&&el.classList&&el.classList.contains('slide')&&!el.classList.contains('hero');
+function target(sec){const sr=sec.getBoundingClientRect(),cs=getComputedStyle(sec);
+ const top=sr.top+scrollY+parseFloat(cs.paddingTop),ht=sr.height-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom),H=head(),avail=innerHeight-H;
+ if(sec.classList.contains('cinematic-chapter'))return sr.top+scrollY-H;
+ if(ht<=avail-48)return Math.round(top-H-(avail-ht)/2);
+ return Math.round(top-H-40);}
+function go(sec,smooth){const y=Math.max(0,target(sec));scrollTo({top:y,behavior:smooth?'smooth':'auto'});}
+const orig=Element.prototype.scrollIntoView;
+Element.prototype.scrollIntoView=function(o){if(ok(this)&&(o===undefined||o===true||(o&&(o.block===undefined||o.block==='start')))){go(this,!(o&&o.behavior==='auto'));return}return orig.apply(this,arguments)};
+document.addEventListener('click',e=>{const a=e.target.closest&&e.target.closest('a[href^="#"]');if(!a)return;const id=a.getAttribute('href');if(id.length<2||id.startsWith('#app-'))return;let el=document.querySelector(id);const hh=el&&el.closest&&el.closest('.slide.hero');if(hh){el=hh.nextElementSibling;while(el&&!(el.classList&&el.classList.contains('slide')))el=el.nextElementSibling}if(!ok(el))return;e.preventDefault();go(el,true);history.replaceState(null,'',id)},true);
+})();</script>
+</body></html>
