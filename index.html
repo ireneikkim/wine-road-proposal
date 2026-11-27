@@ -1570,6 +1570,17 @@ section[aria-labelledby="caps-title"] .caps{margin-bottom:calc(-1 * clamp(28px,4
 #partnership .pt-grid{row-gap:clamp(48px,10vh,110px)!important}
 #partnership .pt-grid>div{padding-top:clamp(32px,5vh,56px)!important}
 }
+
+/* PC: Dream Winery intro and the wine list each fill one screen (balanced with Partnership) */
+@media (min-width:900px) and (min-height:640px){
+#dream.slide,#list.slide{min-height:calc(100vh - var(--head,64px));justify-content:center}
+#dream .sec-head{margin-bottom:clamp(68px,10vh,110px)!important}
+#dream .pillars{gap:clamp(40px,5vw,80px)!important}
+#dream .pillars div{padding-top:clamp(32px,5vh,56px)!important;gap:12px}
+#dream .pillars .ic{width:64px;height:64px;padding:10px;margin-bottom:10px}
+#dream .pillars h3{font-size:24px}
+#dream .pillars p{font-size:16px;line-height:1.75}
+}
 #cinematic-experience .cinematic-photo-caption{color:#fff!important;font-weight:400!important;font-size:13px!important;opacity:1!important;text-shadow:0 1px 3px rgba(0,0,0,.75),0 0 10px rgba(0,0,0,.45)!important}
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
