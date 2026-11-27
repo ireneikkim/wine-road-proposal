@@ -1678,6 +1678,19 @@ section[aria-labelledby="caps-title"] .caps{margin-bottom:calc(-1 * clamp(28px,4
 #expertise .lang-wrap .labels.lang{margin-top:0!important;padding-top:0!important;border-top:0!important}
 #expertise .lang-wrap .lead{margin-top:8px;font-size:14px}
 #expertise .cred-panel:not(.cred-education) .cred-certifications{flex:0 0 auto!important;margin-bottom:24px}
+/* Why Me PC: both columns share rows -> logo rows, caption rows and the two thin lines line up */
+@media (min-width:900px){
+#expertise .credentials{grid-template-rows:auto auto auto 1fr;row-gap:0}
+#expertise .cred-panel{display:grid!important;grid-row:span 4;grid-template-rows:subgrid;align-content:start}
+#expertise .cred-panel>h3{grid-row:1}
+#expertise .cred-panel>.cred-logos{grid-row:2;margin-bottom:0!important;align-self:start}
+#expertise .cred-panel>.lang-wrap{grid-row:3/span 2;margin-top:14px!important;padding-top:13px!important;align-self:start}
+#expertise .cred-education>.cred-degree{grid-row:3;margin-top:14px!important;padding-top:13px!important}
+#expertise .cred-education>.cred-src{grid-row:4}
+#expertise .cred-schools figure{grid-template-rows:112px auto!important;align-items:end}
+#expertise .cred-schools figure img,#expertise .cred-schools figure:first-child img{height:112px!important}
+#expertise .cred-logos figcaption{margin-top:8px!important}
+}
 #cinematic-experience .cinematic-photo-caption{color:#fff!important;font-weight:400!important;font-size:13px!important;opacity:1!important;text-shadow:0 1px 3px rgba(0,0,0,.75),0 0 10px rgba(0,0,0,.45)!important}
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
