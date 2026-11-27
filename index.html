@@ -1597,6 +1597,12 @@ section[aria-labelledby="caps-title"] .caps{margin-bottom:calc(-1 * clamp(28px,4
 .cin-ready .cinematic-chapter.cin-in .cinematic-copy>.cinematic-rule{width:80px!important;transition-delay:1.85s}
 .cin-ready #cinematic-experience.cin-in .cinematic-photo-caption,.cin-ready #cinematic-culture.cin-in .ruinart-cap{opacity:1!important;transition-delay:2.1s}
 }
+/* journey film autoplay: sound-on button */
+.film-sound{position:absolute;z-index:4;top:16px;right:16px;display:inline-flex;align-items:center;gap:8px;background:rgba(20,16,12,.38);color:#fff;border:1px solid rgba(255,255,255,.85);padding:7px 14px;font-size:13px;font-weight:500;letter-spacing:.08em;cursor:pointer;backdrop-filter:blur(4px);transition:opacity .4s ease,background .2s}
+.film-sound:hover{background:rgba(20,16,12,.6)}
+.film-sound svg{width:16px;height:16px}
+.film-sound[hidden]{display:none}
+@media (max-width:899px){.film-sound{top:10px;right:10px;padding:5px 10px;font-size:12px}}
 #cinematic-experience .cinematic-photo-caption{color:#fff!important;font-weight:400!important;font-size:13px!important;opacity:1!important;text-shadow:0 1px 3px rgba(0,0,0,.75),0 0 10px rgba(0,0,0,.45)!important}
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -2385,7 +2391,7 @@ const secs=()=>[...document.querySelectorAll('main > section.slide')].filter(s=>
 const headH=()=>{const h=document.querySelector('header');return h?h.getBoundingClientRect().bottom:0};
 const isFull=s=>s.classList.contains('hero')||s.classList.contains('cinematic-chapter');
 function box(s){const r=s.getBoundingClientRect();if(isFull(s))return{top:r.top,bottom:r.bottom};const cs=getComputedStyle(s);return{top:r.top+parseFloat(cs.paddingTop),bottom:r.bottom-parseFloat(cs.paddingBottom)}}
-function landing(s){if(s.classList.contains('hero'))return 0;const r=s.getBoundingClientRect(),H=headH(),avail=innerHeight-H;if(s.classList.contains('cinematic-chapter'))return r.top+scrollY-H;const b=box(s),ht=b.bottom-b.top;if(ht<=avail-16)return Math.round(b.top+scrollY-H-(avail-ht)/2);return Math.round(b.top+scrollY-H-40)}
+function landing(s){if(s.classList.contains('hero'))return 0;const tf=s.querySelector('#travel-film .film-visual');if(tf){const r=tf.getBoundingClientRect(),H=headH(),avail=innerHeight-H;if(r.height<=avail-32)return Math.round(r.top+scrollY-H-(avail-r.height)/2)}const r=s.getBoundingClientRect(),H=headH(),avail=innerHeight-H;if(s.classList.contains('cinematic-chapter'))return r.top+scrollY-H;const b=box(s),ht=b.bottom-b.top;if(ht<=avail-16)return Math.round(b.top+scrollY-H-(avail-ht)/2);return Math.round(b.top+scrollY-H-40)}
 function current(L){const mid=(headH()+innerHeight)/2;let best=0,bd=1e9;L.forEach((s,i)=>{const r=s.getBoundingClientRect();if(r.top<=mid&&r.bottom>=mid){bd=-1;best=i}else if(bd>=0){const d=Math.min(Math.abs(r.top-mid),Math.abs(r.bottom-mid));if(d<bd){bd=d;best=i}}});return best}
 /* animation */
 let raf=0,animEnd=0;const busy=()=>raf!==0;
@@ -2399,7 +2405,7 @@ function step(dir){const L=secs();if(!L.length)return;const i=current(L),s=L[i],
  const n=L[i+dir];if(!n)return;
  if(dir<0&&!isFull(n)){const nb=box(n);if(nb.bottom-nb.top>vh-2*pad+80){animateTo(scrollY+nb.bottom-(innerHeight-pad));return}}
  animateTo(landing(n))}
-function blocked(e){if(!MQ.matches||e.ctrlKey||e.metaKey)return true;const f=document.getElementById('full-film');if(f&&!f.hidden&&f.getBoundingClientRect().height>0)return true;if(document.querySelector('[role=dialog]:not([hidden]),dialog[open]'))return true;return false}
+function blocked(e){if(!MQ.matches||e.ctrlKey||e.metaKey)return true;if(document.fullscreenElement)return true;if(document.querySelector('[role=dialog]:not([hidden]),dialog[open]'))return true;return false}
 function innerScrollable(el,dy){for(let n=el;n&&n!==document.body&&n!==document.documentElement;n=n.parentElement){const cs=getComputedStyle(n);if(/(auto|scroll)/.test(cs.overflowY)&&n.scrollHeight>n.clientHeight+1){if(dy>0&&n.scrollTop+n.clientHeight<n.scrollHeight-1)return true;if(dy<0&&n.scrollTop>0)return true}}return false}
 /* gesture detection: a gesture = a stream of wheel events without a 240ms pause, in one direction.
    Trackpad inertia keeps the stream alive with decaying deltas, so it never triggers a second step.
@@ -2418,7 +2424,7 @@ addEventListener('keydown',e=>{if(blocked(e)||e.altKey)return;const tg=e.target;
  if(e.key==='ArrowDown'||e.key==='PageDown'||(e.key===' '&&!e.shiftKey&&!/^(BUTTON|A)$/.test(tg.tagName)))d=1;else if(e.key==='ArrowUp'||e.key==='PageUp'||(e.key===' '&&e.shiftKey))d=-1;
  if(!d)return;e.preventDefault();if(busy()||e.repeat&&performance.now()-animEnd<150)return;step(d)});
 /* any other way of scrolling (links, scrollbar, touch) cancels our animation */
-['mousedown','touchstart'].forEach(t=>addEventListener(t,stop,{passive:true}));
+['mousedown','touchstart'].forEach(t=>addEventListener(t,stop,{passive:true}));window.__ppt={animateTo,stop,busy};
 document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('a[href^="#"]'))stop()},true);
 })();</script>
 <script>(()=>{/* photo chapters entrance trigger (replays each visit) */
@@ -2426,5 +2432,33 @@ if(!('IntersectionObserver' in window)||matchMedia('(prefers-reduced-motion:redu
 const L=document.querySelectorAll('.cinematic-chapter');if(!L.length)return;document.documentElement.classList.add('cin-ready');
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.intersectionRatio>=.5)e.target.classList.add('cin-in');else if(e.intersectionRatio===0)e.target.classList.remove('cin-in')}),{threshold:[0,.5]});
 L.forEach(s=>{s.querySelector('img')?.removeAttribute('loading');io.observe(s)});
+})();</script>
+<script>(()=>{/* journey film: muted autoplay when in view, pause when out, auto-advance to the itinerary when it ends */
+const tf=document.getElementById('travel-film'),f=document.getElementById('full-film');if(!tf||!f||!('IntersectionObserver' in window))return;
+if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+const vis=tf.querySelector('.film-visual'),im=f.previousElementSibling,cv=tf.querySelector('.film-cover'),list=document.querySelector('#signature-trip .trip-summary');
+const snd=document.createElement('button');snd.type='button';snd.className='film-sound';snd.hidden=true;
+snd.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg><span>SOUND ON</span>';
+vis.appendChild(snd);
+snd.addEventListener('click',e=>{e.stopPropagation();f.muted=false;f.volume=1;snd.hidden=true;if(f.paused)f.play().catch(()=>{})});
+f.addEventListener('volumechange',()=>{snd.hidden=!f.muted||f.hidden});
+let auto=false,advance=false,inView=false,pausedByUs=false;
+function show(){im.hidden=true;im.style.display='none';cv.style.display='none';f.hidden=false;tf.classList.remove('ended')}
+function start(){auto=true;advance=true;f.muted=true;f.setAttribute('muted','');snd.hidden=false;
+ if(!f.getAttribute('src')){f.preload='auto';f.src='journey-film.mp4';f.load()}
+ const go=()=>{if(!inView)return;show();f.play().catch(()=>{snd.hidden=true;im.hidden=false;im.style.display='';cv.style.display='';f.hidden=true;auto=false})};
+ if(f.readyState>=3)go();else f.addEventListener('canplay',go,{once:true})}
+const io=new IntersectionObserver(es=>es.forEach(e=>{const r=e.intersectionRatio;
+ if(r>=.6){inView=true;if(!auto&&f.paused&&!tf.classList.contains('ended')&&!f.currentTime)start();else if(pausedByUs&&f.paused){pausedByUs=false;f.play().catch(()=>{})}}
+ else if(r<.25){inView=false;if(!f.paused){f.pause();pausedByUs=true;advance=false}}}),{threshold:[0,.25,.6]});
+io.observe(tf);
+/* any manual navigation while the film plays cancels the auto-advance */
+const cancel=()=>{if(!f.paused)advance=false};
+addEventListener('wheel',cancel,{passive:true});addEventListener('touchmove',cancel,{passive:true});
+addEventListener('keydown',e=>{if(/^(Arrow|Page|Home|End| )/.test(e.key))cancel()});
+f.addEventListener('pause',()=>{if(!f.ended&&!pausedByUs)advance=false});
+f.addEventListener('ended',()=>{snd.hidden=true;if(!advance||!inView||!list)return;advance=false;
+ setTimeout(()=>{const H=(document.querySelector('header')?.getBoundingClientRect().bottom)||0;const y=list.getBoundingClientRect().top+scrollY-H-40;
+  if(window.__ppt&&matchMedia('(min-width:900px)').matches)window.__ppt.animateTo(y);else scrollTo({top:y,behavior:'smooth'})},900)});
 })();</script>
 </body></html>
