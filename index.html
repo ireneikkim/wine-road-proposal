@@ -1607,6 +1607,25 @@ section[aria-labelledby="caps-title"] .caps{margin-bottom:calc(-1 * clamp(28px,4
 .pg-auto{position:absolute;left:0;bottom:0;z-index:9;height:2px;width:100%;background:rgba(210,176,106,.95);transform:scaleX(0);transform-origin:left;pointer-events:none;opacity:0;transition:opacity .3s}
 .pg-auto.run{opacity:1;animation:pgAuto var(--d,7s) linear forwards}
 @keyframes pgAuto{to{transform:scaleX(1)}}
+/* Why Now numbers: count-up keeps the unit still */
+.stats b .num{display:inline-block;text-align:right}
+/* Santé: two glasses come together and clink, sparkle, bubbles rise (replays each visit) */
+.toast .bb{stroke-width:1.2;opacity:0}
+@media (prefers-reduced-motion:no-preference){
+.toast .gl path{stroke-dashoffset:0!important;animation:none!important}
+.toast .gl.l,.toast .gl.r{animation:none!important;transition:none}
+.toast:not(.clink) .gl.l{transform:translateX(-30px) rotate(-6deg)!important;opacity:0}
+.toast:not(.clink) .gl.r{transform:translateX(30px) rotate(6deg)!important;opacity:0}
+.toast:not(.clink) .spark{opacity:0!important;animation:none!important}
+.toast.clink .gl.l{animation:clinkL 1.25s cubic-bezier(.3,.6,.3,1) forwards!important}
+.toast.clink .gl.r{animation:clinkR 1.25s cubic-bezier(.3,.6,.3,1) forwards!important}
+.toast.clink .spark{animation:clinkSpark .7s ease .72s both!important}
+.toast.clink .bb{animation:clinkBub 1.6s ease-out calc(1s + var(--bd)) 2 both}
+@keyframes clinkL{0%{opacity:0;transform:translateX(-30px) rotate(-6deg)}20%{opacity:1}58%{transform:translateX(0) rotate(14deg)}68%{transform:rotate(8deg)}82%{transform:rotate(13deg)}100%{opacity:1;transform:rotate(12deg)}}
+@keyframes clinkR{0%{opacity:0;transform:translateX(30px) rotate(6deg)}20%{opacity:1}58%{transform:translateX(0) rotate(-14deg)}68%{transform:rotate(-8deg)}82%{transform:rotate(-13deg)}100%{opacity:1;transform:rotate(-12deg)}}
+@keyframes clinkSpark{0%{opacity:0;transform:scale(.3)}45%{opacity:1;transform:scale(1.2)}100%{opacity:1;transform:scale(1)}}
+@keyframes clinkBub{0%{opacity:0;transform:translateY(0)}20%{opacity:.9}100%{opacity:0;transform:translateY(-22px)}}
+}
 #cinematic-experience .cinematic-photo-caption{color:#fff!important;font-weight:400!important;font-size:13px!important;opacity:1!important;text-shadow:0 1px 3px rgba(0,0,0,.75),0 0 10px rgba(0,0,0,.45)!important}
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -2034,8 +2053,8 @@ section[aria-labelledby="caps-title"] .caps{margin-bottom:calc(-1 * clamp(28px,4
     <div class="close-main">
       <svg class="toast" viewBox="0 0 240 200" aria-hidden="true">
         <g fill="none" stroke="#af8a40" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <g class="gl l"><path d="M58 40h44c0 30-6 52-22 56-16-4-22-26-22-56z"/><path d="M61 62h38c-2 20-8 32-19 34-11-2-17-14-19-34z" fill="#af8a40" fill-opacity=".28" stroke="none"/><path d="M80 96v58M62 156h36"/></g>
-          <g class="gl r"><path d="M138 40h44c0 30-6 52-22 56-16-4-22-26-22-56z"/><path d="M141 62h38c-2 20-8 32-19 34-11-2-17-14-19-34z" fill="#af8a40" fill-opacity=".28" stroke="none"/><path d="M160 96v58M142 156h36"/></g>
+          <g class="gl l"><path d="M58 40h44c0 30-6 52-22 56-16-4-22-26-22-56z"/><path d="M61 62h38c-2 20-8 32-19 34-11-2-17-14-19-34z" fill="#af8a40" fill-opacity=".28" stroke="none"/><path d="M80 96v58M62 156h36"/><circle class="bb" cx="74" cy="88" r="1.8" style="--bd:0s"/><circle class="bb" cx="84" cy="84" r="1.4" style="--bd:0.25s"/><circle class="bb" cx="79" cy="90" r="1.2" style="--bd:0.5s"/></g>
+          <g class="gl r"><path d="M138 40h44c0 30-6 52-22 56-16-4-22-26-22-56z"/><path d="M141 62h38c-2 20-8 32-19 34-11-2-17-14-19-34z" fill="#af8a40" fill-opacity=".28" stroke="none"/><path d="M160 96v58M142 156h36"/><circle class="bb" cx="156" cy="86" r="1.4" style="--bd:0.15s"/><circle class="bb" cx="165" cy="88" r="1.8" style="--bd:0.4s"/><circle class="bb" cx="161" cy="90" r="1.2" style="--bd:0.65s"/></g>
           <path class="spark" d="M120 6v16M100 12l9 11M140 12l-9 11"/>
         </g>
       </svg>
@@ -2488,5 +2507,16 @@ new MutationObserver(ms=>{if(ms.some(m=>[...m.addedNodes].some(n=>n.classList&&n
 const takeOver=e=>{if(!e.isTrusted)return;stopped=true;clearTimeout(t2);clearBar();if(spread.contains(e.target)){manual=true;clearTimeout(t1)}};
 sec.addEventListener('click',takeOver,true);sec.addEventListener('touchstart',takeOver,{capture:true,passive:true});
 sec.addEventListener('keydown',e=>{if(/^Arrow(Left|Right)$/.test(e.key))takeOver(e)},true);
+})();</script>
+<script>(()=>{/* Why Now count-up + Santé clink, replayed on every visit */
+if(!('IntersectionObserver' in window)||matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+const st=document.querySelector('.stats');
+if(st){const items=[...st.querySelectorAll('b')].map(b=>{const tn=[...b.childNodes].find(n=>n.nodeType===3&&n.textContent.trim());if(!tn)return null;const txt=tn.textContent.trim(),val=parseFloat(txt.replace(/,/g,'')),dec=(txt.split('.')[1]||'').length;const sp=document.createElement('span');sp.className='num';sp.textContent=txt;b.replaceChild(sp,tn);return{sp,val,dec,txt}}).filter(Boolean);
+ let raf=0;const fix=()=>items.forEach(it=>{it.sp.style.width='';it.sp.style.width=it.sp.getBoundingClientRect().width+'px'});
+ const run=()=>{cancelAnimationFrame(raf);fix();const t0=performance.now();const f=now=>{let done=true;items.forEach((it,i)=>{const t=Math.min(1,Math.max(0,(now-t0-i*140)/1500));if(t<1)done=false;const e=1-Math.pow(1-t,3);it.sp.textContent=t>=1?it.txt:(it.val*e).toFixed(it.dec)});if(!done)raf=requestAnimationFrame(f)};raf=requestAnimationFrame(f)};
+ let shown=false;new IntersectionObserver(es=>es.forEach(e=>{if(e.intersectionRatio>=.6&&!shown){shown=true;run()}else if(e.intersectionRatio===0){shown=false;cancelAnimationFrame(raf);items.forEach(it=>it.sp.textContent=it.txt)}}),{threshold:[0,.6]}).observe(st);
+ addEventListener('resize',()=>{items.forEach(it=>{it.sp.style.width=''})});}
+const tg=document.querySelector('.toast');
+if(tg)new IntersectionObserver(es=>es.forEach(e=>{if(e.intersectionRatio>=.8)tg.classList.add('clink');else if(e.intersectionRatio===0)tg.classList.remove('clink')}),{threshold:[0,.8]}).observe(tg);
 })();</script>
 </body></html>
