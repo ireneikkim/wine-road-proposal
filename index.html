@@ -2552,7 +2552,7 @@ if(tg)new IntersectionObserver(es=>es.forEach(e=>{if(e.intersectionRatio>=.8)tg.
 })();</script>
 <script>(()=>{/* digital guide: cycle map -> info -> quiz, Bourgogne then Bordeaux, until the visitor takes over */
 const sec=document.getElementById('app-bourgogne');if(!sec||!('IntersectionObserver' in window))return;
-const STEP=5500,tabs=[...sec.querySelectorAll('.guide-tabs [role=tab]')];if(!tabs.length)return;
+const STEP=3500,tabs=[...sec.querySelectorAll('.guide-tabs [role=tab]')];if(!tabs.length)return;
 const seq=[];tabs.forEach(t=>{const panel=document.getElementById(t.getAttribute('aria-controls'));if(!panel)return;[...panel.querySelectorAll('.guide-choices button')].forEach(b=>{seq.push({t,b});if(!b.querySelector('.gd-bar')){const i=document.createElement('i');i.className='gd-bar';i.setAttribute('aria-hidden','true');b.appendChild(i)}})});
 let k=0,tm=0,inView=false,stopped=false;
 function bars(on){seq.forEach(x=>x.b.classList.remove('gd-run'));if(on){const b=seq[k].b;void b.offsetWidth;b.style.setProperty('--gd',STEP+'ms');b.classList.add('gd-run')}}
