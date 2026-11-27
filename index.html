@@ -1627,6 +1627,11 @@ section[aria-labelledby="caps-title"] .caps{margin-bottom:calc(-1 * clamp(28px,4
 @keyframes clinkSpark{0%{opacity:0;transform:scale(.3)}45%{opacity:1;transform:scale(1.2)}100%{opacity:1;transform:scale(1)}}
 @keyframes clinkBub{0%{opacity:0;transform:translateY(0)}20%{opacity:.9}100%{opacity:0;transform:translateY(-22px)}}
 }
+/* PC: journey film title + whole film fit on one screen */
+@media (min-width:900px){
+#signature-trip .sec-head{margin-bottom:36px!important}
+#travel-film{max-width:min(100%,calc((100vh - var(--head,64px) - 300px) * 1.7778))!important;margin-inline:auto!important}
+}
 #cinematic-experience .cinematic-photo-caption{color:#fff!important;font-weight:400!important;font-size:13px!important;opacity:1!important;text-shadow:0 1px 3px rgba(0,0,0,.75),0 0 10px rgba(0,0,0,.45)!important}
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -2399,7 +2404,7 @@ addEventListener('resize',fit);addEventListener('load',fit);document.fonts&&docu
 <script>(()=>{const s=document.querySelector('.slide.hero.kvh');if(!s)return;const r=()=>{if(s.scrollTop||s.scrollLeft){s.scrollTop=0;s.scrollLeft=0}};s.addEventListener('scroll',r);document.addEventListener('focusin',r,true)})()</script><script>(()=>{/* in-page navigation: land with the section's content centred in the visible area */
 const head=()=>{const h=document.querySelector('header');return h?h.getBoundingClientRect().height:0};
 const ok=el=>el&&el.classList&&el.classList.contains('slide')&&!el.classList.contains('hero');
-function target(sec){const fv=sec.querySelector('#travel-film .film-visual');if(fv){const r=fv.getBoundingClientRect(),H=head(),avail=innerHeight-H;if(r.height<=avail-32)return Math.round(r.top+scrollY-H-(avail-r.height)/2)}const sr=sec.getBoundingClientRect(),cs=getComputedStyle(sec);
+function target(sec){const fv=sec.querySelector('#travel-film .film-visual');if(fv){const hh=sec.querySelector('.sec-head'),a=(hh||fv).getBoundingClientRect(),b=fv.getBoundingClientRect(),r={top:a.top-24,height:b.bottom-a.top+24},H=head(),avail=innerHeight-H;if(r.height<=avail-32)return Math.round(r.top+scrollY-H-(avail-r.height)/2)}const sr=sec.getBoundingClientRect(),cs=getComputedStyle(sec);
  const top=sr.top+scrollY+parseFloat(cs.paddingTop),ht=sr.height-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom),H=head(),avail=innerHeight-H;
  if(sec.classList.contains('cinematic-chapter'))return sr.top+scrollY-H;
  if(ht<=avail-16)return Math.round(top-H-(avail-ht)/2);
@@ -2415,7 +2420,7 @@ const secs=()=>[...document.querySelectorAll('main > section.slide')].filter(s=>
 const headH=()=>{const h=document.querySelector('header');return h?h.getBoundingClientRect().bottom:0};
 const isFull=s=>s.classList.contains('hero')||s.classList.contains('cinematic-chapter');
 function box(s){const r=s.getBoundingClientRect();if(isFull(s))return{top:r.top,bottom:r.bottom};const cs=getComputedStyle(s);return{top:r.top+parseFloat(cs.paddingTop),bottom:r.bottom-parseFloat(cs.paddingBottom)}}
-function landing(s){if(s.classList.contains('hero'))return 0;const tf=s.querySelector('#travel-film .film-visual');if(tf){const r=tf.getBoundingClientRect(),H=headH(),avail=innerHeight-H;if(r.height<=avail-32)return Math.round(r.top+scrollY-H-(avail-r.height)/2)}const r=s.getBoundingClientRect(),H=headH(),avail=innerHeight-H;if(s.classList.contains('cinematic-chapter'))return r.top+scrollY-H;const b=box(s),ht=b.bottom-b.top;if(ht<=avail-16)return Math.round(b.top+scrollY-H-(avail-ht)/2);return Math.round(b.top+scrollY-H-40)}
+function landing(s){if(s.classList.contains('hero'))return 0;const tf=s.querySelector('#travel-film .film-visual');if(tf){const r=fb(s,tf),H=headH(),avail=innerHeight-H;if(r.height<=avail-32)return Math.round(r.top+scrollY-H-(avail-r.height)/2)}const r=s.getBoundingClientRect(),H=headH(),avail=innerHeight-H;if(s.classList.contains('cinematic-chapter'))return r.top+scrollY-H;const b=box(s),ht=b.bottom-b.top;if(ht<=avail-16)return Math.round(b.top+scrollY-H-(avail-ht)/2);return Math.round(b.top+scrollY-H-40)}
 function current(L){const mid=(headH()+innerHeight)/2;let best=0,bd=1e9;L.forEach((s,i)=>{const r=s.getBoundingClientRect();if(r.top<=mid&&r.bottom>=mid){bd=-1;best=i}else if(bd>=0){const d=Math.min(Math.abs(r.top-mid),Math.abs(r.bottom-mid));if(d<bd){bd=d;best=i}}});return best}
 /* animation */
 let raf=0,animEnd=0;const busy=()=>raf!==0;
@@ -2423,8 +2428,9 @@ const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
 function stop(){if(raf){cancelAnimationFrame(raf);raf=0;animEnd=performance.now()}}
 function animateTo(y){stop();const max=document.documentElement.scrollHeight-innerHeight;y=Math.max(0,Math.min(max,Math.round(y)));const from=scrollY,d=y-from;if(Math.abs(d)<2)return;const dur=Math.max(520,Math.min(820,420+Math.abs(d)*.3)),t0=performance.now();
  const f=now=>{const t=Math.min(1,(now-t0)/dur);scrollTo({top:from+d*ease(t),behavior:'instant'});if(t<1)raf=requestAnimationFrame(f);else{raf=0;animEnd=performance.now()}};raf=requestAnimationFrame(f)}
+const fb=(s,v)=>{const h=s.querySelector('.sec-head'),a=(h||v).getBoundingClientRect(),b=v.getBoundingClientRect();return{top:a.top-24,height:b.bottom-a.top+24}};
 /* a section holding the journey film: never stop with the film cut off, stop with it centred instead */
-function fstop(s,from,to){const v=s.querySelector('#travel-film .film-visual');if(!v)return to;const r=v.getBoundingClientRect(),H=headH(),avail=innerHeight-H;if(r.height>avail-32)return to;const c=r.top+scrollY-H-(avail-r.height)/2;const lo=Math.min(from,to),hi=Math.max(from,to);if(c>lo+8&&c<hi-8)return c;const t=r.top+scrollY-to,bt=t+r.height;if(t<innerHeight&&bt>H&&(t<H||bt>innerHeight))return Math.abs(c-from)>8?c:to;if(t>=H&&bt<=innerHeight&&Math.abs(c-to)<avail*.3)return c;return to}
+function fstop(s,from,to){const v=s.querySelector('#travel-film .film-visual');if(!v)return to;const r=fb(s,v),H=headH(),avail=innerHeight-H;if(r.height>avail-32)return to;const c=r.top+scrollY-H-(avail-r.height)/2;const lo=Math.min(from,to),hi=Math.max(from,to);if(c>lo+8&&c<hi-8)return c;const t=r.top+scrollY-to,bt=t+r.height;if(t<innerHeight&&bt>H&&(t<H||bt>innerHeight)&&(c-from)*(to-from)>0&&Math.abs(c-from)>8)return c;if(t>=H&&bt<=innerHeight&&Math.abs(c-to)<avail*.3)return c;return to}
 function step(dir){const L=secs();if(!L.length)return;const i=current(L),s=L[i],b=box(s),H=headH(),vh=innerHeight-H,pad=28,full=isFull(s);
  if(!full&&dir>0&&b.bottom>innerHeight-pad+80){animateTo(fstop(s,scrollY,scrollY+Math.min(b.bottom-(innerHeight-pad),vh*.85)));return}
  if(!full&&dir<0&&b.top<H+pad-80){animateTo(fstop(s,scrollY,scrollY-Math.min((H+pad)-b.top,vh*.85)));return}
@@ -2514,7 +2520,7 @@ if(!('IntersectionObserver' in window)||matchMedia('(prefers-reduced-motion:redu
 const st=document.querySelector('.stats');
 if(st){const items=[...st.querySelectorAll('b')].map(b=>{const tn=[...b.childNodes].find(n=>n.nodeType===3&&n.textContent.trim());if(!tn)return null;const txt=tn.textContent.trim(),val=parseFloat(txt.replace(/,/g,'')),dec=(txt.split('.')[1]||'').length;const sp=document.createElement('span');sp.className='num';sp.textContent=txt;b.replaceChild(sp,tn);return{sp,val,dec,txt}}).filter(Boolean);
  let raf=0;const fix=()=>items.forEach(it=>{it.sp.style.width='';it.sp.style.width=it.sp.getBoundingClientRect().width+'px'});
- const run=()=>{cancelAnimationFrame(raf);fix();const t0=performance.now();const f=now=>{let done=true;items.forEach((it,i)=>{const t=Math.min(1,Math.max(0,(now-t0-i*200)/2800));if(t<1)done=false;const e=1-Math.pow(1-t,4);it.sp.textContent=t>=1?it.txt:(it.val*e).toFixed(it.dec)});if(!done)raf=requestAnimationFrame(f)};raf=requestAnimationFrame(f)};
+ const run=()=>{cancelAnimationFrame(raf);fix();const t0=performance.now();const f=now=>{let done=true;items.forEach((it,i)=>{const t=Math.min(1,Math.max(0,(now-t0-i*120)/1500));if(t<1)done=false;const e=1-Math.pow(1-t,4);it.sp.textContent=t>=1?it.txt:(it.val*e).toFixed(it.dec)});if(!done)raf=requestAnimationFrame(f)};raf=requestAnimationFrame(f)};
  let shown=false;new IntersectionObserver(es=>es.forEach(e=>{if(e.intersectionRatio>=.6&&!shown){shown=true;run()}else if(e.intersectionRatio===0){shown=false;cancelAnimationFrame(raf);items.forEach(it=>it.sp.textContent=it.txt)}}),{threshold:[0,.6]}).observe(st);
  addEventListener('resize',()=>{items.forEach(it=>{it.sp.style.width=''})});}
 const tg=document.querySelector('.toast');
