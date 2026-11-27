@@ -1560,6 +1560,9 @@ section[aria-labelledby="caps-title"] .caps{margin-bottom:calc(-1 * clamp(28px,4
 #partnership .pt-grid h3{font-size:28px}
 #partnership .pt-grid p{font-size:16px;line-height:1.75}
 }
+
+/* PC guide: tighter gap under the tabs so the phone fits one screen */
+@media (min-width:900px){#app-bourgogne .guide-tabs{margin-bottom:28px!important}#app-bourgogne .sec-head{margin-bottom:44px!important}#app-bourgogne .guide-stage{padding-top:0!important;padding-bottom:0!important}}
 #cinematic-experience .cinematic-photo-caption{color:#fff!important;font-weight:400!important;font-size:13px!important;opacity:1!important;text-shadow:0 1px 3px rgba(0,0,0,.75),0 0 10px rgba(0,0,0,.45)!important}
 </style>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -2335,7 +2338,7 @@ const ok=el=>el&&el.classList&&el.classList.contains('slide')&&!el.classList.con
 function target(sec){const sr=sec.getBoundingClientRect(),cs=getComputedStyle(sec);
  const top=sr.top+scrollY+parseFloat(cs.paddingTop),ht=sr.height-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom),H=head(),avail=innerHeight-H;
  if(sec.classList.contains('cinematic-chapter'))return sr.top+scrollY-H;
- if(ht<=avail-48)return Math.round(top-H-(avail-ht)/2);
+ if(ht<=avail-16)return Math.round(top-H-(avail-ht)/2);
  return Math.round(top-H-40);}
 function go(sec,smooth){const y=Math.max(0,target(sec));scrollTo({top:y,behavior:smooth?'smooth':'auto'});}
 const orig=Element.prototype.scrollIntoView;
